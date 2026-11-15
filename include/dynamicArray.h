@@ -1,15 +1,15 @@
 #ifndef DYNAMICARRAY_H
 #define DYNAMICARRAY_H
-#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
-typedef enum 
+typedef enum error_code_e
 {
     SUCCESS,
     INVALID_ARGUMENT,
     ALREADY_INIT,
     OVERFLOW,
     OUT_OF_MEMORY
-} error_code_e;
+}error_code_e;
 
 typedef struct
 {
@@ -22,7 +22,7 @@ typedef struct
 // capacity 4 , 
 // items apunta a un bloque de memoria reservado
 // element_size tiene el tamano del tipo que queremos almacenar
-bool init(dynarray_t* array, size_t itemSize);
+uint8_t init(dynarray_t* array, size_t itemSize);
 //size_t get_length(dynarray_t* array);
 // copia superficial
 //void push_back(dynarray_t* array,void* item);
@@ -35,6 +35,6 @@ bool init(dynarray_t* array, size_t itemSize);
 //void resize(dynarray_t* array,size_t new_size);
 //void reserve(dynarray_t* array, size_t size);
 //void clear(dynarray_t* array);
-bool destroy(dynarray_t* array);
+uint8_t destroy(dynarray_t* array);
 
 #endif

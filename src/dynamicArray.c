@@ -3,37 +3,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool init(dynarray_t *array, size_t itemSize) {
-  if (array == NULL) {
-    fprintf(stderr, "DynArray Init : Failed to init an invalid array");
-    return false;
+uint8_t init(dynarray_t *array, size_t itemSize) {
+  if (array == NULL)
+  {
+    return INVALID_ARGUMENT;
   }
   if(array->items != NULL)
   {
-    fprintf(stderr, "DynArray Init : Failed to init an array already initialized");
-    return false;
+    return ALREADY_INIT;
+  }
+  if(itemSize < 1)
+  {
+    return INVALID_ARGUMENT;
+  }
+  if(itemSize > SIZE_MAX/4)
+  {
+    return OVERFLOW;
   }
   array->item_size = itemSize;
   array->capacity = 4;
   array->size = 0;
-  array->items = malloc(itemSize * array->capacity);
-  if(array->items == NULL)
+  void* itemsTemp = malloc(itemSize * array->capacity);
+  if(itemsTemp == NULL)
   {
-    fprintf(stderr,"DynArray Init: failed to allocate memory for items\n");
-    return false;
+    return OUT_OF_MEMORY;
 }
-  return true;
+  array->items = itemsTemp;
+  return SUCCESS;
 }
 
-bool destroy(dynarray_t *array) {
-  if (array == NULL || array->items == NULL) {
-    fprintf(stderr, "DynArray Destroy : failed. Array is NULL\n");
-    return false;
+uint8_t destroy(dynarray_t *array) {
+  if (array == NULL) 
+  {
+    return INVALID_ARGUMENT;
   }
-  free(array->items);
+  if (array->items != NULL)
+  {
+    free(array->items);
+  }
+  
   array->item_size = 0;
   array->capacity = 0;
   array->size = 0;
   array->items = NULL;
-  return true;
+  return SUCCESS;
 }
