@@ -71,7 +71,7 @@ uint8_t dynArray_push_back(dynarray_t *array,const void *item)
 
 void *dynArray_get_item(dynarray_t *array, size_t index)
 {
-  if(array == NULL || array->size < index)
+  if(array == NULL || array->size <= index)
   {
     return NULL;
   }
