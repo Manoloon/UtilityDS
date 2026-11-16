@@ -20,12 +20,9 @@ typedef struct
     size_t capacity;
     size_t item_size;
 } dynarray_t;
-// init size 0 , 
-// capacity 4 , 
-// items apunta a un bloque de memoria reservado
-// element_size tiene el tamano del tipo que queremos almacenar
+
 uint8_t dynArray_init(dynarray_t* array, size_t itemSize);
-//size_t get_length(dynarray_t* array);
+size_t dynArray_get_length(dynarray_t* array);
 // copia superficial : offset = size * item_size -> destino = items + offset : 
 
 // casos de borde : 

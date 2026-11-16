@@ -34,6 +34,15 @@ uint8_t dynArray_init(dynarray_t *array, size_t itemSize) {
   return SUCCESS;
 }
 
+size_t dynArray_get_length(dynarray_t *array)
+{
+  if(array == NULL)
+  {
+    return 0;
+  }
+    return array->size;
+}
+
 uint8_t dynArray_push_back(dynarray_t *array,const void *item)
 {
   bool bInvalidArg = array == NULL || item == NULL || array->items == NULL;

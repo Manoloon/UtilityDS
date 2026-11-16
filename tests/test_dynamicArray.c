@@ -59,15 +59,17 @@ void test_insert_item_capacity(void)
     TEST_ASSERT_NOT_NULL(array);
     TEST_ASSERT_TRUE(dynArray_init(array,sizeof(int))==SUCCESS);
     // Insertar cuatro enteros sin ampliar capacidad.
-    for(int i = 1;i < 5;i++)
+    for(int i = 0;i < 4;i++)
     {
         TEST_ASSERT_TRUE(dynArray_push_back(array,&i) == SUCCESS);
     }
     TEST_ASSERT_TRUE(array->capacity == 4);
+    TEST_ASSERT_TRUE(dynArray_get_length(array) == 4);
     // Insertar un quinto entero y comprobar que capacity pasa a 8.
     int itemnew = 5;
     TEST_ASSERT_TRUE(dynArray_push_back(array,&itemnew) == SUCCESS);
     TEST_ASSERT_TRUE(array->capacity == 8);
+    TEST_ASSERT_TRUE(dynArray_get_length(array) == 5);
     int* value = (int*) dynArray_get_item(array,4);
     TEST_ASSERT_TRUE(*value == itemnew);
     TEST_ASSERT_TRUE(dynArray_destroy(array) == SUCCESS);
@@ -98,6 +100,13 @@ void test_insert_custom_structs_array(void)
     TEST_ASSERT_TRUE(value->y == vec.y);
     TEST_ASSERT_TRUE(value->z == vec.z);
 }
+void test_get_length_empty_array(void)
+{
+    dynarray_t* array = calloc(1,sizeof(*array));
+    TEST_ASSERT_FALSE(array == NULL);
+    TEST_ASSERT_TRUE(dynArray_init(array,sizeof(float))==SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_get_length(array) == 0);
+}
 int main(void)
 {
     UNITY_BEGIN();
@@ -110,5 +119,6 @@ int main(void)
     RUN_TEST(test_insert_item_capacity);
     RUN_TEST(test_insert_float_type_array);
     RUN_TEST(test_insert_custom_structs_array);
+    RUN_TEST(test_get_length_empty_array);
     return UNITY_END();
 }
