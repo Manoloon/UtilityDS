@@ -1,6 +1,7 @@
 /*
 [ ] Simular o razonar sobre un fallo de malloc.
 */
+#include <stdlib.h>
 #include "unity.h"
 #include "dynamicArray.h"
 
@@ -11,36 +12,91 @@ void test_init_creates_empty_array(void)
 {
     dynarray_t array = {0};
     // Inicializar un vector de estructuras.
-    TEST_ASSERT_TRUE(init(&array,sizeof(int))== SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int))== SUCCESS);
    
-    destroy(&array);
+    dynArray_destroy(&array);
     // Destruir un vector correctamente inicializado.
     TEST_ASSERT_NULL(array.items);
     // Destruir un vector dos veces.
-    TEST_ASSERT_TRUE(destroy(&array)==SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_destroy(&array)==SUCCESS);
 }
 void test_init_element_size_zero(void)
 {
-     dynarray_t array;
+    dynarray_t array={0};
     // Intentar inicializar con element_size = 0.
-    TEST_ASSERT_TRUE(init(&array,0) == INVALID_ARGUMENT);
+    TEST_ASSERT_TRUE(dynArray_init(&array,0) == INVALID_ARGUMENT);
 }
 void test_call_destroy_null_pointer(void)
 {
     // Llamar a destroy con un puntero NULL.
-    TEST_ASSERT_FALSE(destroy(NULL) == SUCCESS);
+    TEST_ASSERT_FALSE(dynArray_destroy(NULL) == SUCCESS);
 }
 void test_init_null_pointer(void)
 {
     // Intentar inicializar con un puntero al vector igual a NULL.
-    TEST_ASSERT_TRUE(init(NULL,sizeof(int))==INVALID_ARGUMENT);
+    TEST_ASSERT_TRUE(dynArray_init(NULL,sizeof(int))==INVALID_ARGUMENT);
 }
 void test_init_two_times_same_array(void)
 {
     // Intentar inicializar dos veces el mismo vector.
     dynarray_t array = {0};
-    init(&array,sizeof(int));
-    TEST_ASSERT_TRUE(init(&array,sizeof(int)) == ALREADY_INIT);
+    dynArray_init(&array,sizeof(int));
+    TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int)) == ALREADY_INIT);
+}
+// pushback
+void test_insert_item_empty_array(void)
+{
+    dynarray_t array={0};
+    int item = 1;
+    TEST_ASSERT_TRUE(dynArray_push_back(&array,&item) == INVALID_ARGUMENT);
+    //Insertar un entero en un vector vacío.
+    TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int))==SUCCESS);
+    TEST_ASSERT_NOT_NULL(array.items);
+}
+void test_insert_item_capacity(void)
+{
+    dynarray_t* array = calloc(1,sizeof(*array));
+    TEST_ASSERT_NOT_NULL(array);
+    TEST_ASSERT_TRUE(dynArray_init(array,sizeof(int))==SUCCESS);
+    // Insertar cuatro enteros sin ampliar capacidad.
+    for(int i = 1;i < 5;i++)
+    {
+        TEST_ASSERT_TRUE(dynArray_push_back(array,&i) == SUCCESS);
+    }
+    TEST_ASSERT_TRUE(array->capacity == 4);
+    // Insertar un quinto entero y comprobar que capacity pasa a 8.
+    int itemnew = 5;
+    TEST_ASSERT_TRUE(dynArray_push_back(array,&itemnew) == SUCCESS);
+    TEST_ASSERT_TRUE(array->capacity == 8);
+    int* value = (int*) dynArray_get_item(array,4);
+    TEST_ASSERT_TRUE(*value == itemnew);
+    TEST_ASSERT_TRUE(dynArray_destroy(array) == SUCCESS);
+    free(array);
+}
+void test_insert_float_type_array(void)
+{
+    dynarray_t array = {0};
+    TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(float))==SUCCESS);
+    float item = 0.4;
+    TEST_ASSERT_TRUE(dynArray_push_back(&array,&item) == SUCCESS);
+}
+void test_insert_custom_structs_array(void)
+{
+    typedef struct
+    {
+        float x;
+        float y;
+        float z;
+    }vector_t;
+
+    dynarray_t array = {0};
+    TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(vector_t))==SUCCESS);
+    vector_t vec = {3.2,1.4,1.0};
+    TEST_ASSERT_TRUE(dynArray_push_back(&array,&vec) == SUCCESS);
+    vector_t* value = (vector_t*)dynArray_get_item(&array,0);
+    TEST_ASSERT_TRUE(value->x == vec.x);
+    TEST_ASSERT_TRUE(value->y == vec.y);
+    TEST_ASSERT_TRUE(value->z == vec.z);
 }
 int main(void)
 {
@@ -50,5 +106,9 @@ int main(void)
     RUN_TEST(test_call_destroy_null_pointer);
     RUN_TEST(test_init_null_pointer);
     RUN_TEST(test_init_two_times_same_array);
+    RUN_TEST(test_insert_item_empty_array);
+    RUN_TEST(test_insert_item_capacity);
+    RUN_TEST(test_insert_float_type_array);
+    RUN_TEST(test_insert_custom_structs_array);
     return UNITY_END();
 }
