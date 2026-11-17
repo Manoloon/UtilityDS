@@ -13,15 +13,9 @@ typedef enum dynArr_Code_e
     OUT_OF_MEMORY
 }dynArr_Code_e;
 
-typedef struct
-{
-    void* items;
-    size_t size;
-    size_t capacity;
-    size_t item_size;
-} dynarray_t;
+typedef struct dynarray_s dynarray_t;
 
-uint8_t dynArray_init(dynarray_t* array, size_t itemSize);
+dynarray_t* dynArray_create(size_t itemSize);
 size_t dynArray_get_length(dynarray_t* array);
 // copia superficial : offset = size * item_size -> destino = items + offset : 
 
@@ -33,8 +27,12 @@ size_t dynArray_get_length(dynarray_t* array);
     4 - 
 */
 uint8_t dynArray_push_back(dynarray_t* array,const void* item);
+size_t dynArray_get_capacity(dynarray_t* array);
+
+void* dynArray_get_items(dynarray_t* array);
 // devuelve puntero del item en indice index;
 // solo valido si no se realizo ninguna operacion que modifica el conjunto.
+
 void* dynArray_get_item(dynarray_t* array,size_t index);
 //void set_item(dynarray_t* array,int index,void* newData);
 //void* pop_back(dynarray_t* array);
@@ -45,9 +43,7 @@ void* dynArray_get_item(dynarray_t* array,size_t index);
 // but the capacity and the item_size untouch , because we need it to
 // reused.
 uint8_t dynArray_clear(dynarray_t* array);
-// Free the array means , nullify the items list, and make the array
-// available to initialize with other type of items.
-// this no free the array itself, but only the items inside it.
-uint8_t dynArray_free(dynarray_t* array);
+
+uint8_t dynArray_free(dynarray_t** array);
 
 #endif

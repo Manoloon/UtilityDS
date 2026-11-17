@@ -5,33 +5,39 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-uint8_t dynArray_init(dynarray_t *array, size_t itemSize) {
-  if (array == NULL)
+typedef struct dynarray_s
+{
+    void* items;
+    size_t size;
+    size_t capacity;
+    size_t item_size;
+};
+
+dynarray_t *dynArray_create(size_t itemSize)
+{
+  //printf("create itemSize %zu\n",itemSize);
+  dynarray_t* array;
+  if(itemSize < 1 || itemSize > SIZE_MAX / 4)
   {
-    return INVALID_ARGUMENT;
+    return NULL;
   }
-  if(array->items != NULL)
+
+  array = malloc(sizeof(dynarray_t));
+  if(array == NULL)
   {
-    return ALREADY_INIT;
-  }
-  if(itemSize < 1)
-  {
-    return INVALID_ARGUMENT;
-  }
-  if(itemSize > SIZE_MAX/4)
-  {
-    return OVERFLOW;
+    return NULL;
   }
   array->item_size = itemSize;
   array->capacity = 4;
   array->size = 0;
-  void* itemsTemp = malloc(itemSize * array->capacity);
-  if(itemsTemp == NULL)
+  void *itemsTemp = malloc(itemSize * array->capacity);
+  if (itemsTemp == NULL)
   {
-    return OUT_OF_MEMORY;
-}
+    free(array);
+    return NULL;
+  }
   array->items = itemsTemp;
-  return SUCCESS;
+  return array;
 }
 
 size_t dynArray_get_length(dynarray_t *array)
@@ -45,7 +51,9 @@ size_t dynArray_get_length(dynarray_t *array)
 
 uint8_t dynArray_push_back(dynarray_t *array,const void *item)
 {
-  bool bInvalidArg = array == NULL || item == NULL || array->items == NULL || array == item;
+  //printf("%zu : %zu\n",array->item_size,sizeof(item));
+  bool bInvalidArg = array == NULL || item == NULL || array->items == NULL || 
+                    array == item;
   if(bInvalidArg)
   {
     return INVALID_ARGUMENT;
@@ -78,6 +86,24 @@ uint8_t dynArray_push_back(dynarray_t *array,const void *item)
   return SUCCESS;
 }
 
+size_t dynArray_get_capacity(dynarray_t *array)
+{
+  if(array == NULL)
+  {
+    return 0;
+  }
+    return array->capacity;
+}
+
+void *dynArray_get_items(dynarray_t *array)
+{
+  if(array == NULL)
+  {
+    return NULL;
+  }
+    return array->items;
+}
+
 void *dynArray_get_item(dynarray_t *array, size_t index)
 {
   if(array == NULL || array->size <= index)
@@ -97,25 +123,24 @@ uint8_t dynArray_clear(dynarray_t *array)
     {
         free(array->items);
     }
-    array->size = 0;
     array->items = NULL;
+    array->size = 0;
     return SUCCESS;
 }
 
-uint8_t dynArray_free(dynarray_t *array)
+uint8_t dynArray_free(dynarray_t **array)
 {
-    if (array == NULL)
-    {
-        return INVALID_ARGUMENT;
-    }
-    if (array->items != NULL)
-    {
-        free(array->items);
-    }
-
-    array->item_size = 0;
-    array->capacity = 0;
-    array->size = 0;
-    array->items = NULL;
-    return SUCCESS;
+  if (array == NULL || *array == NULL)
+  {
+    return INVALID_ARGUMENT;
+  }
+  void *localItems = dynArray_get_items(*array);
+  if (localItems != NULL)
+  {
+    free(dynArray_get_items(*array));
+  }
+  localItems = NULL;
+  free(*array);
+  *array = NULL;
+  return SUCCESS;
 }
