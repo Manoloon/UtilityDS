@@ -14,11 +14,11 @@ void test_init_creates_empty_array(void)
     // Inicializar un vector de estructuras.
     TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int))== SUCCESS);
    
-    dynArray_destroy(&array);
+    dynArray_free(&array);
     // Destruir un vector correctamente inicializado.
     TEST_ASSERT_NULL(array.items);
     // Destruir un vector dos veces.
-    TEST_ASSERT_TRUE(dynArray_destroy(&array)==SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_free(&array)==SUCCESS);
 }
 void test_init_element_size_zero(void)
 {
@@ -29,7 +29,7 @@ void test_init_element_size_zero(void)
 void test_call_destroy_null_pointer(void)
 {
     // Llamar a destroy con un puntero NULL.
-    TEST_ASSERT_FALSE(dynArray_destroy(NULL) == SUCCESS);
+    TEST_ASSERT_FALSE(dynArray_free(NULL) == SUCCESS);
 }
 void test_init_null_pointer(void)
 {
@@ -42,6 +42,7 @@ void test_init_two_times_same_array(void)
     dynarray_t array = {0};
     dynArray_init(&array,sizeof(int));
     TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int)) == ALREADY_INIT);
+    TEST_ASSERT_TRUE(dynArray_free(&array) == SUCCESS);
 }
 // pushback
 void test_insert_item_empty_array(void)
@@ -52,6 +53,7 @@ void test_insert_item_empty_array(void)
     //Insertar un entero en un vector vacío.
     TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(int))==SUCCESS);
     TEST_ASSERT_NOT_NULL(array.items);
+    TEST_ASSERT_TRUE(dynArray_free(&array) == SUCCESS);
 }
 void test_insert_item_capacity(void)
 {
@@ -72,7 +74,7 @@ void test_insert_item_capacity(void)
     TEST_ASSERT_TRUE(dynArray_get_length(array) == 5);
     int* value = (int*) dynArray_get_item(array,4);
     TEST_ASSERT_TRUE(*value == itemnew);
-    TEST_ASSERT_TRUE(dynArray_destroy(array) == SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_free(array) == SUCCESS);
     free(array);
 }
 void test_insert_float_type_array(void)
@@ -81,6 +83,7 @@ void test_insert_float_type_array(void)
     TEST_ASSERT_TRUE(dynArray_init(&array,sizeof(float))==SUCCESS);
     float item = 0.4;
     TEST_ASSERT_TRUE(dynArray_push_back(&array,&item) == SUCCESS);
+    TEST_ASSERT_TRUE(dynArray_free(&array) == SUCCESS);
 }
 void test_insert_custom_structs_array(void)
 {
@@ -99,6 +102,7 @@ void test_insert_custom_structs_array(void)
     TEST_ASSERT_TRUE(value->x == vec.x);
     TEST_ASSERT_TRUE(value->y == vec.y);
     TEST_ASSERT_TRUE(value->z == vec.z);
+    TEST_ASSERT_TRUE(dynArray_free(&array) == SUCCESS);
 }
 void test_get_length_empty_array(void)
 {
@@ -106,6 +110,21 @@ void test_get_length_empty_array(void)
     TEST_ASSERT_FALSE(array == NULL);
     TEST_ASSERT_TRUE(dynArray_init(array,sizeof(float))==SUCCESS);
     TEST_ASSERT_TRUE(dynArray_get_length(array) == 0);
+    TEST_ASSERT_TRUE(dynArray_free(array) == SUCCESS);
+    TEST_ASSERT_NULL(array->items);
+    free(array);
+}
+void test_clear_and_reuse_array(void)
+{
+    dynarray_t* array = calloc(1,sizeof(*array));
+    TEST_ASSERT_FALSE(array == NULL);
+    TEST_ASSERT_TRUE(dynArray_init(array,sizeof(float))==SUCCESS);
+    float item = 0.4;
+    TEST_ASSERT_TRUE(dynArray_push_back(array,&item) == SUCCESS);
+    size_t prev_size = array->size;
+    TEST_ASSERT_TRUE(dynArray_clear(array) == SUCCESS);
+    TEST_ASSERT_TRUE(array->size != prev_size);
+    free(array);
 }
 int main(void)
 {
@@ -120,5 +139,6 @@ int main(void)
     RUN_TEST(test_insert_float_type_array);
     RUN_TEST(test_insert_custom_structs_array);
     RUN_TEST(test_get_length_empty_array);
+    RUN_TEST(test_clear_and_reuse_array);
     return UNITY_END();
 }

@@ -41,7 +41,13 @@ void* dynArray_get_item(dynarray_t* array,size_t index);
 //void remove(dynarray_t* array,int index);
 //void resize(dynarray_t* array,size_t new_size);
 //void reserve(dynarray_t* array, size_t size);
-//void clear(dynarray_t* array);
-uint8_t dynArray_destroy(dynarray_t* array);
+// Clear the array should left the array with 0 items , items as NULL 
+// but the capacity and the item_size untouch , because we need it to
+// reused.
+uint8_t dynArray_clear(dynarray_t* array);
+// Free the array means , nullify the items list, and make the array
+// available to initialize with other type of items.
+// this no free the array itself, but only the items inside it.
+uint8_t dynArray_free(dynarray_t* array);
 
 #endif

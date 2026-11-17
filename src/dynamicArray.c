@@ -45,7 +45,7 @@ size_t dynArray_get_length(dynarray_t *array)
 
 uint8_t dynArray_push_back(dynarray_t *array,const void *item)
 {
-  bool bInvalidArg = array == NULL || item == NULL || array->items == NULL;
+  bool bInvalidArg = array == NULL || item == NULL || array->items == NULL || array == item;
   if(bInvalidArg)
   {
     return INVALID_ARGUMENT;
@@ -87,7 +87,22 @@ void *dynArray_get_item(dynarray_t *array, size_t index)
     return (uint8_t*)array->items + (index * array->item_size);
 }
 
-uint8_t dynArray_destroy(dynarray_t *array)
+uint8_t dynArray_clear(dynarray_t *array)
+{
+    if (array == NULL)
+    {
+        return INVALID_ARGUMENT;
+    }
+    if (array->items != NULL)
+    {
+        free(array->items);
+    }
+    array->size = 0;
+    array->items = NULL;
+    return SUCCESS;
+}
+
+uint8_t dynArray_free(dynarray_t *array)
 {
     if (array == NULL)
     {
