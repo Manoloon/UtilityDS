@@ -4,18 +4,20 @@
 #include <stddef.h>
 #include <stdint.h>
 
-typedef enum dynArr_Code_e
+typedef enum dynArr_code_e
 {
     SUCCESS,
     INVALID_ARGUMENT,
     ALREADY_INIT,
-    OVERFLOW,
+    MEM_OVERFLOW,
     OUT_OF_MEMORY
-}dynArr_Code_e;
+}dynArr_code_e;
 
 typedef struct dynarray_s dynarray_t;
-
+// create a dynamic array of type : 
+// itemSize = sizeof(item type)
 dynarray_t* dynArray_create(size_t itemSize);
+// get the number of items in the dynamic array
 size_t dynArray_get_length(dynarray_t* array);
 // copia superficial : offset = size * item_size -> destino = items + offset : 
 
@@ -27,8 +29,9 @@ size_t dynArray_get_length(dynarray_t* array);
     4 - 
 */
 uint8_t dynArray_push_back(dynarray_t* array,const void* item);
+// get the capacity of the dynamic array
 size_t dynArray_get_capacity(dynarray_t* array);
-
+// get a pointer to the items of the dynamic array
 void* dynArray_get_items(dynarray_t* array);
 // devuelve puntero del item en indice index;
 // solo valido si no se realizo ninguna operacion que modifica el conjunto.
@@ -39,11 +42,12 @@ void* dynArray_get_item(dynarray_t* array,size_t index);
 //void remove(dynarray_t* array,int index);
 //void resize(dynarray_t* array,size_t new_size);
 //void reserve(dynarray_t* array, size_t size);
+
 // Clear the array should left the array with 0 items , items as NULL 
 // but the capacity and the item_size untouch , because we need it to
 // reused.
 uint8_t dynArray_clear(dynarray_t* array);
-
+// free the items list and then the dynamic array
 uint8_t dynArray_free(dynarray_t** array);
 
 #endif

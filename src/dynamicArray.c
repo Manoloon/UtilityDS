@@ -11,7 +11,7 @@ typedef struct dynarray_s
     size_t size;
     size_t capacity;
     size_t item_size;
-};
+}dynarray_t;
 
 dynarray_t *dynArray_create(size_t itemSize)
 {
@@ -62,12 +62,12 @@ uint8_t dynArray_push_back(dynarray_t *array,const void *item)
   {
     if(array->capacity / 2 + 1 == SIZE_MAX)
     {
-      return OVERFLOW;
+      return MEM_OVERFLOW;
     }
     size_t new_capacity = array->capacity * 2;
     if(new_capacity > SIZE_MAX / array->item_size)
     {
-      return OVERFLOW;
+      return MEM_OVERFLOW;
     }
     size_t new_size = array->item_size * new_capacity;
     void* items_temp = realloc(array->items,new_size);
