@@ -119,11 +119,6 @@ uint8_t dynArray_clear(dynarray_t *array)
     {
         return INVALID_ARGUMENT;
     }
-    //if (array->items != NULL)
-    //{
-       // free(array->items);
-    //}
-    //array->items = NULL;
     array->size = 0;
     return SUCCESS;
 }
