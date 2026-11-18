@@ -20,3 +20,9 @@
 * void* dynArray_get_item(dynarray_t* array,size_t index);
 * uint8_t dynArray_clear(dynarray_t* array);
 * uint8_t dynArray_free(dynarray_t** array);
+## WIP
+* void set_item(dynarray_t* array,size_t index,void* newData);
+* void* pop_back(dynarray_t* array);
+* void remove(dynarray_t* array,size_t index);
+* void resize(dynarray_t* array,size_t new_size);
+* void reserve(dynarray_t* array, size_t size);
