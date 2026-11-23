@@ -1,6 +1,7 @@
 # Utility DataStructures 
 * Compiling as a library to use as FindPackage(UtilityDS)
 * ```cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=D:/Coding/msys64/mingw64/bin/gcc.exe -DCMAKE_INSTALL_PREFIX=D:/Coding/msys64/mingw64 ```
+* O con mingw :   ``` cmake -S . -B build-mingw -G "MinGW Makefiles" -DCMAKE_C_COMPILER=c:/msys64/mingw64/bin/gcc.exe -DCMAKE_INSTALL_PREFIX=c:/msys64/mingw64  ```
 * ```cmake --build build ```
 * ```cmake --install build```
 ## Dynamic Array Datastructure
