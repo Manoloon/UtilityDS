@@ -1,4 +1,8 @@
 # Utility DataStructures 
+* Compiling as a library to use as FindPackage(UtilityDS)
+* ```cmake -S . -B build -G Ninja -DCMAKE_C_COMPILER=D:/Coding/msys64/mingw64/bin/gcc.exe -DCMAKE_INSTALL_PREFIX=D:/Coding/msys64/mingw64 ```
+* ```cmake --build build ```
+* ```cmake --install build```
 ## Dynamic Array Datastructure
 * Dynamic array Contract
 * | Propiedad         | Decisión |
@@ -26,3 +30,4 @@
 * void remove(dynarray_t* array,size_t index);
 * void resize(dynarray_t* array,size_t new_size);
 * void reserve(dynarray_t* array, size_t size);
+
