@@ -14,12 +14,10 @@ queue_t* create_queue();
 
 bool queue_is_empty(queue_t* q);
 
-bool enqueue(queue_t* q, int val);
+bool enqueue(queue_t* q, const void* item);
 
-int dequeue(queue_t* q);
+void* dequeue(queue_t* q);
 
-int peek(queue_t* q);
-
-void queue_test();
+void* peek(queue_t* q);
 
 #endif

@@ -4,7 +4,7 @@
 
 typedef struct qnode_s
 {
-    int data;
+    void* data;
     struct qnode_s* next;
 }qnode_t;
 
@@ -36,7 +36,7 @@ bool queue_is_empty(queue_t *q)
     return q->front == NULL;
 }
 
-bool enqueue(queue_t *q, int val)
+bool enqueue(queue_t *q,const void* item)
 {
     if(q == NULL)
     {
@@ -48,7 +48,7 @@ bool enqueue(queue_t *q, int val)
         printf("enqueue : cannot malloc for node\n");
         return false;
     }
-    node->data = val;
+    node->data = item;
     node->next = NULL;
     if(queue_is_empty(q))
     {
@@ -63,12 +63,12 @@ bool enqueue(queue_t *q, int val)
     return true;
 }
 
-int dequeue(queue_t *q)
+void* dequeue(queue_t *q)
 {
-    if(q == NULL) return -2;
-    if(queue_is_empty(q)) return -1;
+    if(q == NULL) return NULL;
+    if(queue_is_empty(q)) return NULL;
     qnode_t* temp = q->front;
-    int result = temp->data;
+    void* result = temp->data;
     q->front = q->front->next;
     if(queue_is_empty(q))
     {
@@ -78,32 +78,8 @@ int dequeue(queue_t *q)
     return result;
 }
 
-int peek(queue_t *q)
+void* peek(queue_t *q)
 {
-    if(queue_is_empty(q)) return -1;
+    if(q == NULL || queue_is_empty(q)) return NULL;
     return q->front->data;
-}
-
-void queue_test()
-{
-    printf("Start Queue Test\n");
-    queue_t* q = create_queue();
-
-    enqueue(q, 10);
-    enqueue(q, 20);
-    enqueue(q, 30);
-
-    printf("Queue : Front: %d\n", peek(q)); // 10
-
-    printf("Queue : Dequeued: %d\n", dequeue(q)); // 10
-    printf("Queue : Dequeued: %d\n", dequeue(q)); // 20
-
-    enqueue(q, 40);
-
-    printf("Queue : Front: %d\n", peek(q)); // 30
-
-    while (!queue_is_empty(q)) {
-        printf("Queue : Dequeued: %d\n", dequeue(q));
-    }
-    free(q);
 }

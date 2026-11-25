@@ -4,6 +4,7 @@
 * O con mingw :   ``` cmake -S . -B build-mingw -G "MinGW Makefiles" -DCMAKE_C_COMPILER=c:/msys64/mingw64/bin/gcc.exe -DCMAKE_INSTALL_PREFIX=c:/msys64/mingw64  ```
 * ```cmake --build build ```
 * ```cmake --install build```
+
 ## Dynamic Array Datastructure
 * Dynamic array Contract
 * | Propiedad         | Decisión |
@@ -32,3 +33,9 @@
 * void resize(dynarray_t* array,size_t new_size);
 * void reserve(dynarray_t* array, size_t size);
 
+## Queue
+* queue_t* create_queue()
+* bool queue_is_empty(queue_t* q)
+* bool enqueue(queue_t* q, const void* item)
+* void* dequeue(queue_t* q)
+* void* peek(queue_t* q)
