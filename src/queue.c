@@ -27,7 +27,7 @@ queue_t *create_queue()
     return q;
 }
 
-bool is_empty(queue_t *q)
+bool queue_is_empty(queue_t *q)
 {
     if(q == NULL)
     {
@@ -50,7 +50,7 @@ bool enqueue(queue_t *q, int val)
     }
     node->data = val;
     node->next = NULL;
-    if(is_empty(q))
+    if(queue_is_empty(q))
     {
         q->back = node;
         q->front = node;
@@ -65,11 +65,12 @@ bool enqueue(queue_t *q, int val)
 
 int dequeue(queue_t *q)
 {
-    if(is_empty(q)) return -1;
+    if(q == NULL) return -2;
+    if(queue_is_empty(q)) return -1;
     qnode_t* temp = q->front;
     int result = temp->data;
     q->front = q->front->next;
-    if(is_empty(q))
+    if(queue_is_empty(q))
     {
         q->back = NULL;
     }
@@ -79,7 +80,7 @@ int dequeue(queue_t *q)
 
 int peek(queue_t *q)
 {
-    if(is_empty(q)) return -1;
+    if(queue_is_empty(q)) return -1;
     return q->front->data;
 }
 
@@ -101,7 +102,7 @@ void queue_test()
 
     printf("Queue : Front: %d\n", peek(q)); // 30
 
-    while (!is_empty(q)) {
+    while (!queue_is_empty(q)) {
         printf("Queue : Dequeued: %d\n", dequeue(q));
     }
     free(q);

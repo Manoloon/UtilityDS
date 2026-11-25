@@ -12,7 +12,7 @@ typedef struct queue_s queue_t;
 
 queue_t* create_queue();
 
-bool is_empty(queue_t* q);
+bool queue_is_empty(queue_t* q);
 
 bool enqueue(queue_t* q, int val);
 
