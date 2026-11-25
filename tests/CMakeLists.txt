@@ -10,4 +10,4 @@ FetchContent_MakeAvailable(unity)
 add_executable(test_dynamicArray test_dynamicArray.c)
 target_link_libraries(test_dynamicArray PRIVATE UtilityDS unity)
 
-add_test(NAME DynamicArrayTests COMMAND UtilityDS)
+add_test(NAME DynamicArrayTests COMMAND test_dynamicArray)
