@@ -7,7 +7,9 @@ set(CMAKE_C_EXTENSIONS OFF)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
-add_library(UtilityDS STATIC src/dynamicArray.c)
+add_library(UtilityDS STATIC 
+        src/dynamicArray.c 
+        src/queue.c)
 add_library(UtilityDS::UtilityDS ALIAS UtilityDS)
 
 target_include_directories(UtilityDS PUBLIC 

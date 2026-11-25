@@ -1,6 +1,3 @@
-/*
-[ ] Simular o razonar sobre un fallo de malloc.
-*/
 #include <stdlib.h>
 #include "unity.h"
 #include "dynamicArray.h"
